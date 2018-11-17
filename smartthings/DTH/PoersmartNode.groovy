@@ -22,6 +22,7 @@ metadata {
         capability "Thermostat Mode"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
+        capability "Switch"
         attribute "Id", "string"
         attribute "NodeName", "string"
         attribute "NodeSN", "string"
@@ -43,7 +44,9 @@ metadata {
 
 
     tiles(scale: 2) {
-
+        valueTile("modeLabel", "device.thermostatMode", width: 4, height: 2) {
+            state "thermostatMode", label: 'Thermostat Mode:', unit: ""
+        }
         standardTile("mode", "device.thermostatMode", width: 2, height: 2, decoration: "flat") {
             state "OFF", action: "cycleMode", nextState: "updating", icon: "st.thermostat.heating-cooling-off", backgroundColor: "#CCCCCC", defaultState: true
             state "MAN", action: "cycleMode", nextState: "updating", icon: "st.thermostat.heat"
@@ -52,10 +55,12 @@ metadata {
             state "AUTO/MAN", action: "cycleMode", nextState: "updating", icon: "st.thermostat.emergency-heat"
             state "updating", label: "Working"
         }
-
-        standardTile("heating", "device.actuatorHeatStatus", width: 2, height: 2, decoration: "flat") {
-            state "false", backgroundColor: "#CCCCCC", defaultState: true
-            state "true", icon: "st.thermostat.heating"
+        valueTile("heatingLabel", "device.actuatorHeatStatus", width: 4, height: 1) {
+            state "actuatorHeatStatus", label: 'Actuator:', unit: ""
+        }
+        standardTile("heating", "device.actuatorHeatStatus", width: 2, height: 1, decoration: "flat") {
+            state "false", backgroundColor: "#CCCCCC"
+            state "true", icon: "st.thermostat.heating", backgroundColor: "#F3FF00"
         }
 
         valueTile("battery", "device.battery", decoration: "flat", inactiveLabel: false, width: 2, height: 2) {
@@ -99,6 +104,21 @@ metadata {
         standardTile("raiseHeatingSetpoint", "device.heatingSetpoint", width: 2, height: 1, inactiveLabel: false, decoration: "flat") {
             state "heatingSetpoint", action: "raiseHeatingSetpoint", icon: "st.thermostat.thermostat-right"
         }
+        standardTile("buttonOffMode", "device.thermostatMode", width: 1, height: 1) {
+            state "thermostatMode", label: 'Off', action: "off", icon: "st.thermostat.heating-cooling-off", backgroundColor: "#ffffff"
+        }
+        standardTile("buttonAuto", "device.thermostatMode", width: 1, height: 1, decoration: "flat") {
+            state "thermostatMode", label: 'AUTO', action: "auto", backgroundColor: "#ffffff"
+        }
+        standardTile("buttonMan", "device.thermostatMode", width: 1, height: 1, decoration: "flat") {
+            state "thermostatMode", label: 'MAN', action: "heat", backgroundColor: "#ffffff"
+        }
+        standardTile("buttonECO", "device.thermostatMode", width: 1, height: 1, decoration: "flat") {
+            state "thermostatMode", label: 'ECO', action: "eco", backgroundColor: "#ffffff"
+        }
+        standardTile("buttonEmergencyHeat", "device.thermostatMode", width: 2, height: 1, decoration: "flat") {
+            state "thermostatMode", label: 'Emergency Heat', action: "emergencyHeat", backgroundColor: "#ffffff"
+        }
         // the "switch" tile will appear in the Things view
         main("temperature")
 
@@ -106,8 +126,10 @@ metadata {
         // view (order is left-to-right, top-to-bottom)
         details([
                 "lowerHeatingSetpoint", "heatingSetpoint", "raiseHeatingSetpoint",
-                "mode", "heating", "battery"
-                , "temperature", "humidity"
+                "modeLabel", "mode",
+                "heatingLabel", "heating",
+                "buttonOffMode", "buttonAuto", "buttonMan", "buttonECO", "buttonEmergencyHeat",
+                "battery", "temperature", "humidity"
         ])
     }
 }
@@ -121,12 +143,21 @@ def off() {
     updateThermostatMode('OFF')
 }
 
+// handle commands
+def on() {
+    auto();
+}
+
 def heat() {
     updateThermostatMode('MAN')
 }
 
+def eco() {
+    updateThermostatMode('ECO')
+}
+
 def emergencyHeat() {
-    runIn(2, "setGetThermostatMode", [data: [nextMode: 'AUTO'], overwrite: true])
+    runIn(2, "setGetThermostatMode", [data: [nextMode: 'MAN'], overwrite: true])
     runIn(5, "updateSetpoints", [data: [degrees: 25, mode: device.currentValue("thermostatMode")], overwrite: true])
 }
 
