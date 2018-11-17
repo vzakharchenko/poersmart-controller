@@ -1,0 +1,2 @@
+cd cron
+./update.sh
