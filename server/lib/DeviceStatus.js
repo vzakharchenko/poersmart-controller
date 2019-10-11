@@ -1,3 +1,4 @@
+const { int8ArrayToHex, arrayToInt16 } = require('./Utils');
 
 const gateWayStatus = {
   mac: '',
@@ -7,6 +8,7 @@ const gateWayStatus = {
   read: false,
   nodes: {},
 };
+
 
 function setField(fieldName, fieldValue) {
   gateWayStatus[fieldName] = fieldValue;
@@ -21,11 +23,16 @@ function addNode(node) {
   }
 }
 
-function addNodeMode(nodeMac, mode, modeInt) {
+function addNodeMode(nodeMac, mode, modeInt, message) {
   const node = gateWayStatus.nodes[nodeMac];
   if (node) {
     node.mode = mode;
     node.modeInt = modeInt;
+    node.message = int8ArrayToHex(message);
+    const overrideTemperatureHex = message.slice(26, 28);
+    const overrideTemperature = arrayToInt16(overrideTemperatureHex) / 9;
+    node.message = int8ArrayToHex(message);
+    node.overrideTemperature = overrideTemperature;
     node.readMode = true;
   }
 }
@@ -42,7 +49,15 @@ function readCurrentStatus() {
         && gateWayStatus.nodes[mac].readMode;
     });
     if (allNodeRead) {
-      return JSON.parse(JSON.stringify(gateWayStatus));
+      const parse = JSON.parse(JSON.stringify(gateWayStatus));
+      delete parse.read;
+      parse.nodes.forEach((node) => {
+        const n = node;
+        delete n.read;
+        delete n.readMode;
+        delete n.message;
+      });
+      return parse;
     }
   }
   return {};

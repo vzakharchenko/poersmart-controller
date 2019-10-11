@@ -40,8 +40,8 @@ test('GateWay Device-> Cloud With Node', () => {
   expect(node.actuatorStatus).toEqual(false);
   expect(node.humidity).toEqual(59);
   expect(node.curTemp).toEqual(233);
-  expect(node.overrideTemperature).toEqual(210);
-  expect(node.SptTemprature).toEqual(70);
+  // expect(node.overrideTemperature).toEqual(210);
+  // expect(node.SptTemprature).toEqual(70);
   const message1 = event.plugin.gateWayToDevice(event);
   expect(message1).toBeDefined();
   const message2 = event.plugin.gateWayAskDevice(event, node);
@@ -72,8 +72,8 @@ test('GateWay Device-> Cloud With Node Actuator Active', () => {
   expect(node.actuatorStatus).toEqual(true);
   expect(node.humidity).toEqual(59);
   expect(node.curTemp).toEqual(233);
-  expect(node.overrideTemperature).toEqual(210);
-  expect(node.SptTemprature).toEqual(70);
+  // expect(node.overrideTemperature).toEqual(210);
+  // expect(node.SptTemprature).toEqual(70);
   const message1 = event.plugin.gateWayToDevice(event);
   const arrayToHex1 = int8ArrayToHex(message1);
   expect(message1).toBeDefined();
@@ -167,8 +167,8 @@ test('Cloud-> Device Action change mode ', () => {
   expect(node.actuatorStatus).toEqual(true);
   expect(node.humidity).toEqual(59);
   expect(node.curTemp).toEqual(233);
-  expect(node.overrideTemperature).toEqual(210);
-  expect(node.SptTemprature).toEqual(70);
+  // expect(node.overrideTemperature).toEqual(210);
+  // expect(node.SptTemprature).toEqual(70);
   const action = {
     mac: node.mac,
     modeInt: 1,
@@ -201,8 +201,8 @@ test('Cloud-> Device Action TempTemperature ', () => {
   expect(node.actuatorStatus).toEqual(true);
   expect(node.humidity).toEqual(59);
   expect(node.curTemp).toEqual(233);
-  expect(node.overrideTemperature).toEqual(210);
-  expect(node.SptTemprature).toEqual(70);
+  // expect(node.overrideTemperature).toEqual(210);
+  // expect(node.SptTemprature).toEqual(70);
   const action = {
     mac: node.mac,
     modeInt: 1,

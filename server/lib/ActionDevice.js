@@ -3,6 +3,10 @@ const actionDevice = {
 };
 
 
+function setReAction(nodeMac, action) {
+  actionDevice.action[nodeMac] = action;
+}
+
 function setAction(nodeMac, fieldName, fieldValue) {
   let element = actionDevice.action[nodeMac];
   if (!element) {
@@ -40,6 +44,7 @@ module.exports.setAction = setAction;
 
 module.exports.activateAction = activateAction;
 module.exports.getAction = getAction;
+module.exports.setReAction = setReAction;
 
 module.exports.MODE_INTEGER = 'modeInt';
 module.exports.OVERRIDE_TEMPERATURE = 'overrideTemperature';

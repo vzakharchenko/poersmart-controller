@@ -18,6 +18,7 @@ const {
   DEVICE_CHANGE_TYPE,
   TEMP_HOUR,
   TEMP_MINUTE,
+  setReAction,
 } = require('./ActionDevice');
 
 function readEventNumber(message) {
@@ -95,21 +96,21 @@ function readNode(message) {
   updatedMessage = shiftRight(updatedMessage, 3);
   const curTemp = readTemp(updatedMessage);
   updatedMessage = shiftRight(updatedMessage, 2);
-  const overrideTemperature = readTemp(updatedMessage);
+  // const overrideTemperature = readTemp(updatedMessage);
   updatedMessage = shiftRight(updatedMessage, 2);
   const softVersion = readSoftVersion(updatedMessage);
-  updatedMessage = shiftRight(updatedMessage, 4);
-  const SptTemprature = readTemp(updatedMessage);
+  // updatedMessage = shiftRight(updatedMessage, 4);
+  // const SptTemprature = readTemp(updatedMessage);
   return {
     mac,
     hardVersion,
     battery,
     humidity,
     curTemp,
-    overrideTemperature,
+    // overrideTemperature,
     softVersion,
     actuatorStatus,
-    SptTemprature,
+  //  SptTemprature,
   };
 }
 
@@ -133,7 +134,7 @@ function deviceAskGateWay(message) {
   // let arrayToHex = int8ArrayToHex(updatedMessage);
   const mode = readMode(updatedMessage);
   const modeInt = readModeInt(updatedMessage);
-  addNodeMode(nodeMac, mode, modeInt);
+  addNodeMode(nodeMac, mode, modeInt, message);
   return {
     operation: constants[constants.GATEWAY_ASK_DEVICE],
     count: number,
@@ -141,6 +142,7 @@ function deviceAskGateWay(message) {
     nodeMac,
     mode,
     modeInt,
+    message,
     plugin: require('./GateWayConnections'), // eslint-disable-line global-require
   };
 }
@@ -228,29 +230,25 @@ function gateWayActionDevice(event, action) {
   const minutes = date.getMinutes();
   const hour = date.getHours();
   const dayOfWeek = date.getDay();
+  const node = currentStatus().nodes[action.mac];
+  if (!node || !node.message) {
+    setReAction(action.mac, action);
+    return null;
+  }
   if (action.type === DEVICE_CHANGE_TYPE) {
     const array = new Uint8Array(415);
+    array.set(hexToUint8Array(node.message), 2);
     array.set(hexToUint8Array('00031a00'));
     array.set(hexToUint8Array(event.mac), 4);
     array.set(hexToUint8Array(action.mac), 16);
     array.set(int16ToUint8Array((hour + minutes + seconds) * dayOfWeek), 22);
-    // array.set(hexToUint8Array('3502'), 22);
-    if (action[MODE_INTEGER]) {
+    if (action[MODE_INTEGER] !== undefined && action[MODE_INTEGER] !== null) {
       array.set(int8ToUint8Array(action[MODE_INTEGER]), 24);
-    } else {
-      array.set(int8ToUint8Array(currentStatus().nodes[action.mac].modeInt), 24);
     }
-    array.set(hexToUint8Array('1800'), 26);
-    // array.set(hexToUint8Array('161e'), 26);
     if (action[OVERRIDE_TEMPERATURE]) {
       array.set(int16ToUint8Array(action[OVERRIDE_TEMPERATURE] * 9), 28);
-    } else {
-      array.set(int16ToUint8Array(currentStatus().nodes[action.mac].overrideTemperature * 9), 28);
     }
-    array.set(hexToUint8Array('de03'), 30);// EcoTemperature
-    array.set(hexToUint8Array('7602'), 32);// OffTemperature
-    array.set(hexToUint8Array('00030000040101b207030000040101b2070000760207000807090054060c0062070e005406101e6207171e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602060fe907081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e76020000000000000000000000000000000000000000000000000000760207000807090054060c0062070e005406101e6207171e7602000000000000000000000000000000000000000000000000'), 34);// ?
-    // let arrayToHex = int8ArrayToHex(array);
+    //  let arrayToHex = int8ArrayToHex(array);
     return array;
   }
 
