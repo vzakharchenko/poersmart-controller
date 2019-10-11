@@ -212,6 +212,6 @@ test('Cloud-> Device Action TempTemperature ', () => {
     temp_minute: 15,
   };
   const message1 = event.plugin.gateWayActionDevice(event, action);
-  const arrayToHex = int8ArrayToHex(message1);
-  expect(arrayToHex).toEqual('000f7400fee8922dec10000000000000fce892000bff01130f016207');
+  const arrayToHex = int8ArrayToHex(message1.subarray(4));
+  expect(arrayToHex).toEqual('fee8922dec10000000000000fce892000bff01130f016207');
 });
