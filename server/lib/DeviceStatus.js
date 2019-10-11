@@ -51,8 +51,8 @@ function readCurrentStatus() {
     if (allNodeRead) {
       const parse = JSON.parse(JSON.stringify(gateWayStatus));
       delete parse.read;
-      parse.nodes.forEach((node) => {
-        const n = node;
+      Object.keys(parse.nodes).forEach((mac) => {
+        const n = parse.nodes[mac];
         delete n.read;
         delete n.readMode;
         delete n.message;

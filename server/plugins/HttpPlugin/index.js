@@ -11,7 +11,7 @@ const {
   TEMP_HOUR,
   TEMP_MINUTE
 } = require('../../lib/ActionDevice');
-// const { modes } = require('../../lib/Utils');
+ const { modes } = require('../../lib/Utils');
 
 
 const server = express();
@@ -41,6 +41,26 @@ server.get('/action/changeModeInt', (req, res) => {
     setAction(node, MODE_INTEGER, newMode);
     activateAction(node, DEVICE_CHANGE_TYPE);
     res.send(JSON.stringify({ status: 'OK' }));
+  }
+});
+server.get('/action/changeMode', (req, res) => {
+  const newMode = req.query.mode;
+  const node = req.query.node;
+  if (!newMode) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Mode is empty' }));
+  } else if (!node) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
+  } else {
+   const m = Object.keys(modes).find((mode)=>{
+      return modes[mode]===newMode.toUpperCase();
+    });
+   if (!m){
+     res.end(JSON.stringify({ status: 'FAIL', message: ' MODE is unknown' }));
+   } else {
+     setAction(node, MODE_INTEGER, m);
+     activateAction(node, DEVICE_CHANGE_TYPE);
+     res.send(JSON.stringify({ status: 'OK' }));
+   }
   }
 });
 
