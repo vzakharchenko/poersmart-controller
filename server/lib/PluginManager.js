@@ -6,7 +6,7 @@ function startPlugins() {
     if (plugins.plugins.includes(file) &&
       fs.lstatSync(`./plugins/${file}`).isDirectory() &&
       fs.existsSync(`./plugins/${file}/index.js`)) {
-      const { start } = require(`../plugins/${file}/index.js`);
+      const { start } = require(`../plugins/${file}/index.js`); // eslint-disable-line global-require, import/no-dynamic-require
       start();
     }
   });
@@ -19,7 +19,7 @@ function stopPlugins() {
     if (plugins.plugins.includes(file) &&
       fs.lstatSync(`./plugins/${file}`).isDirectory() &&
       fs.existsSync(`./plugins/${file}/index.js`)) {
-      const { stop } = require(`../plugins/${file}/index.js`);
+      const { stop } = require(`../plugins/${file}/index.js`); // eslint-disable-line global-require, import/no-dynamic-require
       stop();
     }
   });

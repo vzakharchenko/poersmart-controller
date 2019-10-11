@@ -38,7 +38,8 @@ function readCurrentStatus() {
   if (gateWayStatus.read) {
     let allNodeRead = true;
     Object.keys(gateWayStatus.nodes).forEach((mac) => {
-      allNodeRead &= gateWayStatus.nodes[mac].read && gateWayStatus.nodes[mac].readMode;
+      allNodeRead &= gateWayStatus.nodes[mac].read // eslint-disable-line no-bitwise
+        && gateWayStatus.nodes[mac].readMode;
     });
     if (allNodeRead) {
       return JSON.parse(JSON.stringify(gateWayStatus));

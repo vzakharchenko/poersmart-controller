@@ -23,7 +23,7 @@ server.on('message', (message, remote) => {
   console.log(`${remote.address}:${remote.port} - ${int8ArrayToHex(message)}`);
   const event = gateWaySelector(message);
   const response = prepareResponse(event);
-  server.send(response, 0, response.length, remote.port, remote.address, (err, bytes) => {
+  server.send(response, 0, response.length, remote.port, remote.address, (err) => {
     // server.close();
     if (err) throw err;
     console.log(`UDP message sent to ${remote.address}:${remote.port} - ${int8ArrayToHex(response)}`);
@@ -41,14 +41,14 @@ server.on('message', (message, remote) => {
             const actionAutoDevice = event.plugin.gateWayActionDevice(event, actionAuto);
             server.send(
               actionAutoDevice, 0, actionAutoDevice.length, remote.port,
-              remote.address, (err, bytes) => {
-                if (err) throw err;
+              remote.address, (err1) => {
+                if (err1) throw err1;
                 console.log(`UDP message sent to ${remote
                   .address}:${remote.port} - ${int8ArrayToHex(action)}`);
                 server.send(
                   action, 0,
-                  action.length, remote.port, remote.address, (err, bytes) => {
-                    if (err) throw err;
+                  action.length, remote.port, remote.address, (err5) => {
+                    if (err5) throw err5;
                     console.log(`UDP message sent to ${remote
                       .address}:${remote.port} - ${int8ArrayToHex(action)}`);
                   },
@@ -56,16 +56,16 @@ server.on('message', (message, remote) => {
               },
             );
           } else {
-            server.send(action, 0, action.length, remote.port, remote.address, (err, bytes) => {
-              if (err) throw err;
+            server.send(action, 0, action.length, remote.port, remote.address, (err2) => {
+              if (err2) throw err2;
               console.log(`UDP message sent to ${remote.address}:${remote.port} - ${int8ArrayToHex(action)}`);
             });
           }
         } else {
           const array = askDevice(event, node);
           if (array) {
-            server.send(array, 0, array.length, remote.port, remote.address, (err, bytes) => {
-              if (err) throw err;
+            server.send(array, 0, array.length, remote.port, remote.address, (err3) => {
+              if (err3) throw err3;
               console.log(`UDP message sent to ${remote.address}:${remote.port} - ${int8ArrayToHex(response)}`);
             });
           }

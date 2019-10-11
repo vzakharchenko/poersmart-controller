@@ -69,7 +69,7 @@ function readHumidity(message) {
 function readActuatorStatus(message) {
   const actuatorStatusHex = message.slice(0, 1);
   const actuatorStatus = arrayToInt8(actuatorStatusHex);
-  return (1 & actuatorStatus) === 1;
+  return (1 & actuatorStatus) === 1; // eslint-disable-line no-bitwise
 }
 
 function readCountNodes(message) {
@@ -79,7 +79,7 @@ function readCountNodes(message) {
 
 function readHardVersion(message) {
   const hardHex = message.slice(0, 1);
-  return (hardHex[0] | 240) - 240;
+  return (hardHex[0] | 240) - 240; // eslint-disable-line no-bitwise
 }
 
 function readNode(message) {
@@ -115,7 +115,7 @@ function readNode(message) {
 
 function readNodes(message, count) {
   const nodes = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < count; i++) { // eslint-disable-line no-plusplus
     const node = readNode(message);
     nodes.push(node);
     addNode(node);
@@ -141,7 +141,7 @@ function deviceAskGateWay(message) {
     nodeMac,
     mode,
     modeInt,
-    plugin: require('./GateWayConnections'),
+    plugin: require('./GateWayConnections'), // eslint-disable-line global-require
   };
 }
 
@@ -171,7 +171,7 @@ function deviceToGateWay(message) {
     softVersion,
     hardVersion,
     wifiLevel,
-    plugin: require('./GateWayConnections'),
+    plugin: require('./GateWayConnections'), // eslint-disable-line global-require
     nodes,
   };
 }
@@ -184,7 +184,7 @@ function deviceConfirmation(message) {
     operation: constants[constants.CONFIRM_WRITE_DEVICE],
     count: number,
     mac,
-    plugin: require('./GateWayConnections'),
+    plugin: require('./GateWayConnections'), // eslint-disable-line global-require
   };
 }
 
@@ -209,7 +209,7 @@ function gateWayToDevice(event) {
   // array.set(hexToUint8Array('0a06'), 22);
   array.set(int16ToUint8Array(year), 23);
   array.set(hexToUint8Array('000'), 25);
-  const arrayToHex = int8ArrayToHex(array);
+  //  const arrayToHex = int8ArrayToHex(array);
   return array;
 }
 
@@ -231,7 +231,6 @@ function gateWayActionDevice(event, action) {
   if (action.type === DEVICE_CHANGE_TYPE) {
     const array = new Uint8Array(415);
     array.set(hexToUint8Array('00031a00'));
-    // array.set(hexToUint8Array('fee8922dec10000000000000fce892000bff010003001800400bde03760200030000040101b207030000040101b2070000760207000807090054060c0062070e005406101e6207171e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602060fe907081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e76020000000000000000000000000000000000000000000000000000760207000807090054060c0062070e005406101e6207171e7602000000000000000000000000000000000000000000000000'),4);
     array.set(hexToUint8Array(event.mac), 4);
     array.set(hexToUint8Array(action.mac), 16);
     array.set(int16ToUint8Array((hour + minutes + seconds) * dayOfWeek), 22);

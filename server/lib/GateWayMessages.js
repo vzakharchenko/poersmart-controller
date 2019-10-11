@@ -1,7 +1,5 @@
 const { int8ArrayToHex, shiftRight } = require('./Utils');
 const { constants } = require('./constant');
-const { currentStatus } = require('./DeviceStatus');
-const { getAction } = require('./ActionDevice');
 const {
   deviceToGateWay,
   deviceAskGateWay,
@@ -23,7 +21,7 @@ function gateWaySelector(message) {
   } else if (eventHex === constants.CONFIRM_WRITE_TEMP_DEVICE) {
     event = deviceConfirmation(messageWithoutHeader);
   }
- // console.log(`device status ${JSON.stringify(currentStatus())}`);
+  // console.log(`device status ${JSON.stringify(currentStatus())}`);
   return event;
 }
 
