@@ -30,9 +30,15 @@ function addNodeMode(nodeMac, mode, modeInt, message) {
     node.modeInt = modeInt;
     node.message = int8ArrayToHex(message);
     const overrideTemperatureHex = message.slice(26, 28);
+    const offTemperatureHex = message.slice(28, 30);
+    const ecoTemperatureHex = message.slice(30, 32);
     const overrideTemperature = arrayToInt16(overrideTemperatureHex) / 9;
+    const offTemperature = arrayToInt16(offTemperatureHex) / 9;
+    const ecoTemperature = arrayToInt16(ecoTemperatureHex) / 9;
     node.message = int8ArrayToHex(message);
     node.overrideTemperature = overrideTemperature;
+    node.offTemperature = offTemperature;
+    node.ecoTemperature = ecoTemperature;
     node.readMode = true;
   }
 }

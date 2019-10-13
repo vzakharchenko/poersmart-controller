@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function startPlugins() {
-  const plugins = JSON.parse(fs.readFileSync('./plugins/plugins.json', 'utf8'));
+  const plugins = JSON.parse(fs.readFileSync('./plugins.json', 'utf8'));
   plugins.plugins.forEach((file) => {
     if (plugins.plugins.includes(file) &&
       fs.lstatSync(`./plugins/${file}`).isDirectory() &&
@@ -13,7 +13,7 @@ function startPlugins() {
 }
 
 function stopPlugins() {
-  const plugins = JSON.parse(fs.readFileSync('./plugins/plugins.json', 'utf8'));
+  const plugins = JSON.parse(fs.readFileSync('./plugins.json', 'utf8'));
   const files = fs.readdirSync('./plugins/');
   files.forEach((file) => {
     if (plugins.plugins.includes(file) &&

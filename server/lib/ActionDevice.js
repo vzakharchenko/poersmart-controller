@@ -48,6 +48,8 @@ module.exports.setReAction = setReAction;
 
 module.exports.MODE_INTEGER = 'modeInt';
 module.exports.OVERRIDE_TEMPERATURE = 'overrideTemperature';
+module.exports.OFF_TEMPERATURE = 'offTemperature';
+module.exports.ECO_TEMPERATURE = 'ecoTemperature';
 module.exports.MAC = 'mac';
 module.exports.DEVICE_CHANGE_TYPE = 'device_type';
 module.exports.DEVICE_TEMP_TYPE = 'device_temp_type';

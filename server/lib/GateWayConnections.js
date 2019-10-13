@@ -15,6 +15,8 @@ const { addNodeMode, currentStatus } = require('./DeviceStatus');
 const {
   MODE_INTEGER,
   OVERRIDE_TEMPERATURE,
+  OFF_TEMPERATURE,
+  ECO_TEMPERATURE,
   DEVICE_CHANGE_TYPE,
   TEMP_HOUR,
   TEMP_MINUTE,
@@ -247,6 +249,12 @@ function gateWayActionDevice(event, action) {
     }
     if (action[OVERRIDE_TEMPERATURE]) {
       array.set(int16ToUint8Array(action[OVERRIDE_TEMPERATURE] * 9), 28);
+    }
+    if (action[ECO_TEMPERATURE]) {
+      array.set(int16ToUint8Array(action[ECO_TEMPERATURE] * 9), 30);
+    }
+    if (action[OFF_TEMPERATURE]) {
+      array.set(int16ToUint8Array(action[OFF_TEMPERATURE] * 9), 32);
     }
     //  let arrayToHex = int8ArrayToHex(array);
     return array;

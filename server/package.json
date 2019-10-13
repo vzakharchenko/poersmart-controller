@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node  PoerUdpServer.js ",
     "test:init": "jest --init ",
-    "lint": "eslint --ext .js lib/* PoerUdpServer.js",
-    "lint:fix": "eslint --fix --ext .js lib/* PoerUdpServer.js",
+    "lint": "eslint --ext .js lib/* plugins/* PoerUdpServer.js",
+    "lint:fix": "eslint --fix --ext .js lib/* plugins/*  PoerUdpServer.js",
     "start-boot": "pm2 start PoerUdpServer.js",
     "test": "jest"
   },
