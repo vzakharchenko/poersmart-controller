@@ -238,10 +238,10 @@ function gateWayActionDevice(event, action) {
   if (action.type === DEVICE_CHANGE_TYPE) {
     const array = new Uint8Array(415);
     array.set(hexToUint8Array(node.message), 2);
-    array.set(hexToUint8Array('00031a00'));
+    array.set(hexToUint8Array('0003'));
     array.set(hexToUint8Array(event.mac), 4);
     array.set(hexToUint8Array(action.mac), 16);
-    array.set(int16ToUint8Array((hour + minutes + seconds) * dayOfWeek), 22);
+    array.set(int16ToUint8Array((hour + minutes + seconds) * (dayOfWeek + 1)), 22);
     if (action[MODE_INTEGER] !== undefined && action[MODE_INTEGER] !== null) {
       array.set(int8ToUint8Array(action[MODE_INTEGER]), 24);
     }
