@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const { port } = require('./HTTPConfig');
 const { readCurrentStatus } = require('../../lib/DeviceStatus');
@@ -16,18 +17,28 @@ const {
 // const { modes } = require('../../lib/Utils');
 
 
+const corsOptions = {
+  origin(o, callback) {
+    callback(null, true);
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: true,
+  credentials: true,
+  maxAge: 3600,
+};
+
 const server = express();
 
 
 server.use(bodyParser.json());
+server.use(cors(corsOptions));
 
-
-server.get('/health', (req, res) => {
+server.get('/health',cors(corsOptions), (req, res) => {
   const status = { status: 'OK' };
   res.send(JSON.stringify(status));
 });
 
-server.get('/status', (req, res) => {
+server.get('/status',cors(corsOptions), (req, res) => {
   const status = readCurrentStatus();
   res.send(JSON.stringify(status));
 });
@@ -65,7 +76,7 @@ server.get('/status', (req, res) => {
 //   }
 // });
 
-server.get('/action/tempTemperature', (req, res) => {
+server.get('/action/tempTemperature',cors(corsOptions), (req, res) => {
   const temp = req.query.temp;
   const hour = req.query.hour;
   const minute = req.query.minute;
@@ -101,7 +112,7 @@ server.get('/action/tempTemperature', (req, res) => {
 //   }
 // });
 
-server.get('/action/mode/man', (req, res) => {
+server.get('/action/mode/man',cors(corsOptions), (req, res) => {
   const temp = req.query.temp;
   const node = req.query.node;
   if (temp && (temp < 0 || temp > 320)) {
@@ -119,7 +130,7 @@ server.get('/action/mode/man', (req, res) => {
 });
 
 
-server.get('/action/mode/off', (req, res) => {
+server.get('/action/mode/off',cors(corsOptions), (req, res) => {
   const temp = req.query.temp;
   const node = req.query.node;
   if (temp && (temp < 0 || temp > 320)) {
@@ -136,7 +147,7 @@ server.get('/action/mode/off', (req, res) => {
   }
 });
 
-server.get('/action/mode/eco', (req, res) => {
+server.get('/action/mode/eco',cors(corsOptions), (req, res) => {
   const temp = req.query.temp;
   const node = req.query.node;
   if (temp && (temp < 0 || temp > 320)) {
@@ -153,7 +164,7 @@ server.get('/action/mode/eco', (req, res) => {
   }
 });
 
-server.get('/action/mode/auto', (req, res) => {
+server.get('/action/mode/auto',cors(corsOptions), (req, res) => {
   const node = req.query.node;
   if (!node) {
     res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
