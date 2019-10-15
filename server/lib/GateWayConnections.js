@@ -128,10 +128,12 @@ function readNode(message) {
 
 function readNodes(message, count) {
   const nodes = [];
+  let updatedMessage = message;
   for (let i = 0; i < count; i++) { // eslint-disable-line no-plusplus
-    const node = readNode(message);
+    const node = readNode(updatedMessage);
     nodes.push(node);
     addNode(node);
+    updatedMessage = shiftRight(updatedMessage, 26);
   }
   return nodes;
 }
