@@ -1,6 +1,7 @@
 const dgram = require('dgram');
 const { int8ArrayToHex } = require('./lib/Utils');
 const { startPlugins, stopPlugins } = require('./lib/PluginManager');
+const { startHttp, stopHttp } = require('./PoerHttpServer');
 const { DEVICE_TEMP_TYPE, DEVICE_CHANGE_TYPE, getAction } = require('./lib/ActionDevice');
 const {
   gateWaySelector,
@@ -79,8 +80,12 @@ server.bind(SERVER_PORT, SERVER_HOST);
 
 startPlugins();
 
+startHttp();
+
+
 process.on('exit', () => {
   server.stop();
   stopPlugins();
+  stopHttp();
 });
 

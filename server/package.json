@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node  PoerUdpServer.js ",
     "test:init": "jest --init ",
-    "lint": "eslint --ext .js lib/* plugins/* PoerUdpServer.js",
-    "lint:fix": "eslint --fix --ext .js lib/* plugins/*  PoerUdpServer.js",
+    "lint": "eslint --ext .js lib/* PoerUdpServer.js PoerHttpServer.js",
+    "lint:fix": "eslint --fix --ext .js lib/* PoerUdpServer.js PoerHttpServer.js",
     "start-boot": "pm2 start PoerUdpServer.js",
     "test": "jest"
   },
@@ -50,6 +50,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-react-native": "^3.7.0",
     "jest": "^24.9.0"
   }
 }

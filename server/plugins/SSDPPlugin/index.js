@@ -1,6 +1,6 @@
 
 const { ssdpServer, description } = require('./lib/ssdpConnection');
-const { httpServer } = require('../HttpPlugin/index');
+const { httpServer } = require('../../PoerHttpServer');
 
 function start() {
   // start the server

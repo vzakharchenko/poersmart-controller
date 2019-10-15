@@ -47,6 +47,7 @@ module.exports.getAction = getAction;
 module.exports.setReAction = setReAction;
 
 module.exports.MODE_INTEGER = 'modeInt';
+module.exports.SCHEDULE = 'schedule';
 module.exports.OVERRIDE_TEMPERATURE = 'overrideTemperature';
 module.exports.OFF_TEMPERATURE = 'offTemperature';
 module.exports.ECO_TEMPERATURE = 'ecoTemperature';

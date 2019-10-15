@@ -1,6 +1,6 @@
 
 const { Server } = require('node-ssdp');
-const { port } = require('../../HttpPlugin/HTTPConfig');
+const { port } = require('../../../HTTPConfig');
 
 const ssdpServer = new Server({
   location: {

@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { port } = require('./HTTPConfig');
-const { readCurrentStatus } = require('../../lib/DeviceStatus');
+const { readCurrentStatus } = require('./lib/DeviceStatus');
 const {
   setAction, activateAction,
   MODE_INTEGER,
@@ -13,7 +13,8 @@ const {
   DEVICE_CHANGE_TYPE,
   TEMP_HOUR,
   TEMP_MINUTE,
-} = require('../../lib/ActionDevice');
+  SCHEDULE,
+} = require('./lib/ActionDevice');
 // const { modes } = require('../../lib/Utils');
 
 
@@ -33,50 +34,17 @@ const server = express();
 server.use(bodyParser.json());
 server.use(cors(corsOptions));
 
-server.get('/health',cors(corsOptions), (req, res) => {
+server.get('/health', cors(corsOptions), (req, res) => {
   const status = { status: 'OK' };
   res.send(JSON.stringify(status));
 });
 
-server.get('/status',cors(corsOptions), (req, res) => {
+server.get('/status', cors(corsOptions), (req, res) => {
   const status = readCurrentStatus();
   res.send(JSON.stringify(status));
 });
 
-// server.get('/action/changeModeInt', (req, res) => {
-//   const newMode = req.query.mode;
-//   const node = req.query.node;
-//   if (!newMode) {
-//     res.end(JSON.stringify({ status: 'FAIL', message: ' Mode is empty' }));
-//   } else if (!node) {
-//     res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
-//   } else {
-//     setAction(node, MODE_INTEGER, newMode);
-//     activateAction(node, DEVICE_CHANGE_TYPE);
-//     res.send(JSON.stringify({ status: 'OK' }));
-//   }
-// });
-
-// server.get('/action/changeMode', (req, res) => {
-//   const newMode = req.query.mode;
-//   const node = req.query.node;
-//   if (!newMode) {
-//     res.end(JSON.stringify({ status: 'FAIL', message: ' Mode is empty' }));
-//   } else if (!node) {
-//     res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
-//   } else {
-//     const m = Object.keys(modes).find(mode => modes[mode] === newMode.toUpperCase());
-//     if (!m) {
-//       res.end(JSON.stringify({ status: 'FAIL', message: ' MODE is unknown' }));
-//     } else {
-//       setAction(node, MODE_INTEGER, m);
-//       activateAction(node, DEVICE_CHANGE_TYPE);
-//       res.send(JSON.stringify({ status: 'OK' }));
-//     }
-//   }
-// });
-
-server.get('/action/tempTemperature',cors(corsOptions), (req, res) => {
+server.get('/action/tempTemperature', cors(corsOptions), (req, res) => {
   const temp = req.query.temp;
   const hour = req.query.hour;
   const minute = req.query.minute;
@@ -98,21 +66,7 @@ server.get('/action/tempTemperature',cors(corsOptions), (req, res) => {
   }
 });
 
-// server.get('/action/changeOverrideTemperature', (req, res) => {
-//   const temp = req.query.temp;
-//   const node = req.query.node;
-//   if (!temp || temp < 0 || temp > 321) {
-//     res.end(JSON.stringify({ status: 'FAIL', message: ' Mode is empty' }));
-//   } else if (!node) {
-//     res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
-//   } else {
-//     setAction(node, OVERRIDE_TEMPERATURE, temp);
-//     activateAction(node, DEVICE_CHANGE_TYPE);
-//     res.send(JSON.stringify({ status: 'OK' }));
-//   }
-// });
-
-server.get('/action/mode/man',cors(corsOptions), (req, res) => {
+server.get('/action/mode/man', cors(corsOptions), (req, res) => {
   const temp = req.query.temp;
   const node = req.query.node;
   if (temp && (temp < 0 || temp > 320)) {
@@ -130,7 +84,7 @@ server.get('/action/mode/man',cors(corsOptions), (req, res) => {
 });
 
 
-server.get('/action/mode/off',cors(corsOptions), (req, res) => {
+server.get('/action/mode/off', cors(corsOptions), (req, res) => {
   const temp = req.query.temp;
   const node = req.query.node;
   if (temp && (temp < 0 || temp > 320)) {
@@ -147,7 +101,7 @@ server.get('/action/mode/off',cors(corsOptions), (req, res) => {
   }
 });
 
-server.get('/action/mode/eco',cors(corsOptions), (req, res) => {
+server.get('/action/mode/eco', cors(corsOptions), (req, res) => {
   const temp = req.query.temp;
   const node = req.query.node;
   if (temp && (temp < 0 || temp > 320)) {
@@ -164,12 +118,24 @@ server.get('/action/mode/eco',cors(corsOptions), (req, res) => {
   }
 });
 
-server.get('/action/mode/auto',cors(corsOptions), (req, res) => {
+server.get('/action/mode/auto', cors(corsOptions), (req, res) => {
   const node = req.query.node;
   if (!node) {
     res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
   } else {
     setAction(node, MODE_INTEGER, 0);
+    activateAction(node, DEVICE_CHANGE_TYPE);
+    res.send(JSON.stringify({ status: 'OK' }));
+  }
+});
+
+server.post('/action/schedule', cors(corsOptions), (req, res) => {
+  const node = req.query.node;
+  if (!node) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
+  } else {
+    const json = req.body;
+    setAction(node, SCHEDULE, json);
     activateAction(node, DEVICE_CHANGE_TYPE);
     res.send(JSON.stringify({ status: 'OK' }));
   }
@@ -185,6 +151,6 @@ function stop() {
   server.stop();
 }
 
-module.exports.start = start;
-module.exports.stop = stop;
+module.exports.startHttp = start;
+module.exports.stopHttp = stop;
 module.exports.httpServer = server;

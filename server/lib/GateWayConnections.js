@@ -10,7 +10,7 @@ const {
 } = require('./Utils');
 const { constants } = require('./constant');
 const { setField } = require('./DeviceStatus');
-const { addNode } = require('./DeviceStatus');
+const { addNode, schedulerToHex } = require('./DeviceStatus');
 const { addNodeMode, currentStatus } = require('./DeviceStatus');
 const {
   MODE_INTEGER,
@@ -20,6 +20,7 @@ const {
   DEVICE_CHANGE_TYPE,
   TEMP_HOUR,
   TEMP_MINUTE,
+  SCHEDULE,
   setReAction,
 } = require('./ActionDevice');
 
@@ -273,7 +274,9 @@ function gateWayActionDevice(event, action) {
     if (action[OFF_TEMPERATURE]) {
       array.set(int16ToUint8Array(action[OFF_TEMPERATURE] * 9), 32);
     }
-    //  let arrayToHex = int8ArrayToHex(array);
+    if (action[SCHEDULE]) {
+      array.set((schedulerToHex(action[SCHEDULE])), 51);
+    }
     return array;
   }
 
