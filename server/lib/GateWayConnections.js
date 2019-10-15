@@ -127,13 +127,13 @@ function readNode(message) {
   };
 }
 
-function readNodes(message, count) {
+function readNodes(mac, message, count) {
   const nodes = [];
   let updatedMessage = message;
   for (let i = 0; i < count; i++) { // eslint-disable-line no-plusplus
     const node = readNode(updatedMessage);
     nodes.push(node);
-    addNode(node);
+    addNode(mac, node);
     updatedMessage = shiftRight(updatedMessage, 26);
   }
   return nodes;
@@ -149,7 +149,7 @@ function deviceAskGateWay(message) {
   // let arrayToHex = int8ArrayToHex(updatedMessage);
   const mode = readMode(updatedMessage);
   const modeInt = readModeInt(updatedMessage);
-  addNodeMode(nodeMac, mode, modeInt, message);
+  addNodeMode(mac, nodeMac, mode, modeInt, message);
   return {
     operation: constants[constants.GATEWAY_ASK_DEVICE],
     count: number,
@@ -166,21 +166,21 @@ function deviceToGateWay(message) {
   const number = readEventNumber(message);
   let updatedMessage = shiftRight(message, 2);
   const mac = readMac(updatedMessage);
-  setField('mac', mac);
+  setField(mac, 'mac', mac);
   updatedMessage = shiftRight(updatedMessage, 12);
   const softVersion = readSoftVersion(updatedMessage);
-  setField('softVersion', softVersion);
+  setField(mac, 'softVersion', softVersion);
   updatedMessage = shiftRight(updatedMessage, 2);
   const hardVersion = readHardVersion(updatedMessage);
-  setField('hardVersion', hardVersion);
+  setField(mac, 'hardVersion', hardVersion);
   updatedMessage = shiftRight(updatedMessage, 1);
   const wifiLevel = readWiFI(updatedMessage);
-  setField('wifiLevel', wifiLevel);
+  setField(mac, 'wifiLevel', wifiLevel);
   updatedMessage = shiftRight(updatedMessage, 2);
   const countNodes = readCountNodes(updatedMessage);
   updatedMessage = shiftRight(updatedMessage, 1);
-  const nodes = readNodes(updatedMessage, countNodes);
-  setField('read', true);
+  const nodes = readNodes(mac, updatedMessage, countNodes);
+  setField(mac, 'read', true);
   return {
     operation: constants[constants.GATEWAY_DEVICE],
     count: number,
@@ -250,7 +250,7 @@ function gateWayActionDevice(event, action) {
   const minutes = date.getMinutes();
   const hour = date.getHours();
   const dayOfWeek = date.getDay();
-  const node = currentStatus().nodes[action.mac];
+  const node = currentStatus(event.mac).nodes[action.mac];
   if (!node || !node.message) {
     setReAction(action.mac, action);
     return null;

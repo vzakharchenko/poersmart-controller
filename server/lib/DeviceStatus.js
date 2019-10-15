@@ -5,21 +5,29 @@ const {
   int16ToUint8Array,
 } = require('./Utils');
 
-const gateWayStatus = {
-  mac: '',
-  softVersion: '',
-  hardVersion: '',
-  wifiLevel: 0,
-  read: false,
-  nodes: {},
+const gateWayStatuses = {
 };
 
 
-function setField(fieldName, fieldValue) {
+function getGateWayStatus(mac) {
+  let gateWayStatus = gateWayStatuses[mac];
+  if (!gateWayStatus) {
+    gateWayStatus = {
+      read: false,
+      nodes: {},
+    };
+    gateWayStatuses[mac] = gateWayStatus;
+  }
+  return gateWayStatus;
+}
+
+function setField(mac, fieldName, fieldValue) {
+  const gateWayStatus = getGateWayStatus(mac);
   gateWayStatus[fieldName] = fieldValue;
 }
 
-function addNode(node) {
+function addNode(mac, node) {
+  const gateWayStatus = getGateWayStatus(mac);
   const n = gateWayStatus.nodes[node.mac];
   if (!n) {
     gateWayStatus.nodes[node.mac] = Object.assign({}, { read: node.battery > 0 }, node);
@@ -62,7 +70,8 @@ function schedulerToHex(json) {
   return array;
 }
 
-function addNodeMode(nodeMac, mode, modeInt, message) {
+function addNodeMode(mac, nodeMac, mode, modeInt, message) {
+  const gateWayStatus = getGateWayStatus(mac);
   const node = gateWayStatus.nodes[nodeMac];
   if (node) {
     node.mode = mode;
@@ -85,22 +94,23 @@ function addNodeMode(nodeMac, mode, modeInt, message) {
   }
 }
 
-function readStatus() {
-  return JSON.parse(JSON.stringify(gateWayStatus));
+function readStatus(mac) {
+  return JSON.parse(JSON.stringify(getGateWayStatus(mac)));
 }
 
-function readCurrentStatus() {
-  if (gateWayStatus.read) {
+function readCurrentStatus(mac) {
+  const gateWayStatus = gateWayStatuses[mac];
+  if (gateWayStatus && gateWayStatus.read) {
     let allNodeRead = true;
-    Object.keys(gateWayStatus.nodes).forEach((mac) => {
-      allNodeRead &= gateWayStatus.nodes[mac].read // eslint-disable-line no-bitwise
-        && gateWayStatus.nodes[mac].readMode;
+    Object.keys(gateWayStatus.nodes).forEach((nodeMac) => {
+      allNodeRead &= gateWayStatus.nodes[nodeMac].read // eslint-disable-line no-bitwise
+        && gateWayStatus.nodes[nodeMac].readMode;
     });
     if (allNodeRead) {
       const parse = JSON.parse(JSON.stringify(gateWayStatus));
       delete parse.read;
-      Object.keys(parse.nodes).forEach((mac) => {
-        const n = parse.nodes[mac];
+      Object.keys(parse.nodes).forEach((nodeMac) => {
+        const n = parse.nodes[nodeMac];
         delete n.read;
         delete n.readMode;
         delete n.message;
@@ -111,7 +121,13 @@ function readCurrentStatus() {
   return {};
 }
 
+function gateWayList() {
+  return Object.keys(gateWayStatuses);
+}
+
+
 module.exports.currentStatus = readStatus;
+module.exports.gateWayList = gateWayList;
 module.exports.readCurrentStatus = readCurrentStatus;
 module.exports.addNode = addNode;
 module.exports.addNodeMode = addNodeMode;

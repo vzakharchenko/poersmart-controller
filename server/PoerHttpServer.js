@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { port } = require('./HTTPConfig');
-const { readCurrentStatus } = require('./lib/DeviceStatus');
+const { readCurrentStatus, gateWayList } = require('./lib/DeviceStatus');
 const {
   setAction, activateAction,
   MODE_INTEGER,
@@ -39,9 +39,19 @@ server.get('/health', cors(corsOptions), (req, res) => {
   res.send(JSON.stringify(status));
 });
 
-server.get('/status', cors(corsOptions), (req, res) => {
-  const status = readCurrentStatus();
-  res.send(JSON.stringify(status));
+server.get('/gateway/status', cors(corsOptions), (req, res) => {
+  const mac = req.query.mac;
+  if (!mac) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Gateway mac is empty' }));
+  } else {
+    const status = readCurrentStatus(mac);
+    res.send(JSON.stringify(status));
+  }
+});
+
+server.get('/gateway/list', cors(corsOptions), (req, res) => {
+  const l = gateWayList();
+  res.send(JSON.stringify(l));
 });
 
 server.get('/action/tempTemperature', cors(corsOptions), (req, res) => {
