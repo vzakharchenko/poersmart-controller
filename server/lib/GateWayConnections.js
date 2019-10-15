@@ -85,6 +85,16 @@ function readHardVersion(message) {
   return (hardHex[0] | 240) - 240; // eslint-disable-line no-bitwise
 }
 
+function generateUniqId() {
+  const date = new Date();
+  const seconds = date.getSeconds();
+  const minutes = date.getMinutes();
+  const hour = date.getHours();
+  const dayOfWeek = date.getDay();
+  return (hour + minutes + seconds)
+  * (dayOfWeek + 1); // eslint-disable-line no-mixed-operators
+}
+
 function readNode(message) {
   const mac = readMac(message);
   let updatedMessage = shiftRight(message, 8);
@@ -220,8 +230,13 @@ function gateWayToDevice(event) {
 function gateWayAskDevice(event, node) {
   const array = new Uint8Array(22);
   array.set(hexToUint8Array('00051a00'));
-  array.set(hexToUint8Array(event.mac), 4);
-  array.set(hexToUint8Array(event.mac), 4);
+  const macArray = hexToUint8Array(event.mac);
+  const macId = macArray.slice(2, 4);
+  array.set(
+    int16ToUint8Array(generateUniqId() ^ arrayToInt16(macId)) // eslint-disable-line no-bitwise
+    , 2,
+  );
+  array.set(macArray, 4);
   array.set(hexToUint8Array(node.mac), 16);
   return array;
 }
@@ -243,7 +258,7 @@ function gateWayActionDevice(event, action) {
     array.set(hexToUint8Array('0003'));
     array.set(hexToUint8Array(event.mac), 4);
     array.set(hexToUint8Array(action.mac), 16);
-    array.set(int16ToUint8Array((hour + minutes + seconds) * (dayOfWeek + 1)), 22);
+    array.set(int16ToUint8Array(generateUniqId()), 22);
     if (action[MODE_INTEGER] !== undefined && action[MODE_INTEGER] !== null) {
       array.set(int8ToUint8Array(action[MODE_INTEGER]), 24);
     }
@@ -272,6 +287,7 @@ function gateWayActionDevice(event, action) {
   array.set(int16ToUint8Array(action[OVERRIDE_TEMPERATURE] * 9), 26);
   return array;
 }
+
 
 module.exports.deviceToGateWay = deviceToGateWay;
 module.exports.deviceAskGateWay = deviceAskGateWay;

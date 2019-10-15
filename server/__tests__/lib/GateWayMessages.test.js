@@ -46,8 +46,8 @@ test('GateWay Device-> Cloud With Node', () => {
   expect(message1).toBeDefined();
   const message2 = event.plugin.gateWayAskDevice(event, node);
   expect(message2).toBeDefined();
-  const arrayToHex = int8ArrayToHex(message2);
-  expect(arrayToHex).toEqual('00051a00fee8922dec10000000000000fce892000bff');
+  const arrayToHex = int8ArrayToHex(message2.subarray(4));
+  expect(arrayToHex).toEqual('fee8922dec10000000000000fce892000bff');
 });
 
 test('GateWay Device-> Cloud With Node Actuator Active', () => {
@@ -79,8 +79,9 @@ test('GateWay Device-> Cloud With Node Actuator Active', () => {
   expect(message1).toBeDefined();
   const message2 = event.plugin.gateWayAskDevice(event, node);
   expect(message2).toBeDefined();
-  const arrayToHex = int8ArrayToHex(message2);
-  expect(arrayToHex).toEqual('00051a00fee8922dec10000000000000fce892000bff');
+  const arrayToHex = int8ArrayToHex(message2.subarray(4));
+  //const arrayToHex = int8ArrayToHex(message2);
+  expect(arrayToHex).toEqual('fee8922dec10000000000000fce892000bff');
 });
 
 test('GateWay Device-> Cloud Response AUTO/MAN', () => {
