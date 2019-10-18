@@ -93,6 +93,48 @@ server.get('/action/mode/man', cors(corsOptions), (req, res) => {
   }
 });
 
+server.get('/action/temperature/override', cors(corsOptions), (req, res) => {
+  const temp = req.query.temp;
+  const node = req.query.node;
+  if (!temp || (temp < 0 || temp > 320)) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Temperature is wrong' }));
+  } else if (!node) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
+  } else {
+    setAction(node, OVERRIDE_TEMPERATURE, temp);
+    activateAction(node, DEVICE_CHANGE_TYPE);
+    res.send(JSON.stringify({ status: 'OK' }));
+  }
+});
+
+server.get('/action/temperature/off', cors(corsOptions), (req, res) => {
+  const temp = req.query.temp;
+  const node = req.query.node;
+  if (!temp || (temp < 0 || temp > 320)) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Temperature is wrong' }));
+  } else if (!node) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
+  } else {
+    setAction(node, OFF_TEMPERATURE, temp);
+    activateAction(node, DEVICE_CHANGE_TYPE);
+    res.send(JSON.stringify({ status: 'OK' }));
+  }
+});
+
+server.get('/action/temperature/eco', cors(corsOptions), (req, res) => {
+  const temp = req.query.temp;
+  const node = req.query.node;
+  if (!temp || (temp < 0 || temp > 320)) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Temperature is wrong' }));
+  } else if (!node) {
+    res.end(JSON.stringify({ status: 'FAIL', message: ' Node Id is empty' }));
+  } else {
+    setAction(node, ECO_TEMPERATURE, temp);
+    activateAction(node, DEVICE_CHANGE_TYPE);
+    res.send(JSON.stringify({ status: 'OK' }));
+  }
+});
+
 
 server.get('/action/mode/off', cors(corsOptions), (req, res) => {
   const temp = req.query.temp;
