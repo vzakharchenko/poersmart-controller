@@ -6,6 +6,8 @@ const {
   deviceConfirmation,
 } = require('./GateWayConnections');
 
+const { setDraft } = require('./DeviceStatus');
+
 
 function gateWaySelector(message) {
   const operation = message.slice(0, 2);
@@ -58,4 +60,5 @@ module.exports.gateWaySelector = gateWaySelector;
 module.exports.prepareResponse = prepareResponse;
 module.exports.askDevice = askDevice;
 module.exports.sendAction = sendAction;
+module.exports.setDraft = setDraft;
 

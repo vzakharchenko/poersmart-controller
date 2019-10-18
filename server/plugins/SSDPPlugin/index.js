@@ -1,4 +1,4 @@
-
+const logger = require('../../lib/Logger');
 const { ssdpServer, description } = require('./lib/ssdpConnection');
 const { httpServer } = require('../../PoerHttpServer');
 
@@ -8,12 +8,12 @@ function start() {
     description(res);
   });
   ssdpServer.start();
-  console.log('ssdp server started');
+  logger.log('ssdp server started');
 }
 
 function stop() {
   ssdpServer.stop();
-  console.log('ssdp server stopped');
+  logger.log('ssdp server stopped');
 }
 
 module.exports.start = start;

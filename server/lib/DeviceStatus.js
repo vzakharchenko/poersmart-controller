@@ -90,7 +90,10 @@ function addNodeMode(mac, nodeMac, mode, modeInt, message) {
     node.offTemperature = offTemperature;
     node.ecoTemperature = ecoTemperature;
     node.scheduler = schedulerJson;
+    node.nodeMac = nodeMac;
+    node.mac = mac;
     node.readMode = true;
+    node.draft = false;
   }
 }
 
@@ -125,6 +128,28 @@ function gateWayList() {
   return Object.keys(gateWayStatuses);
 }
 
+function getNodeByMac(nodeMac) {
+  let ret = null;
+  Object.keys(gateWayStatuses).forEach((mac) => {
+    const gateWayStatus = gateWayStatuses[mac];
+    const s = Object.keys(gateWayStatus.nodes).find(nm => nm === nodeMac);
+    if (s) {
+      ret = gateWayStatus.nodes[nodeMac];
+    }
+  });
+  return ret;
+}
+
+function setDraft(nodeMac) {
+  Object.keys(gateWayStatuses).forEach((mac) => {
+    const gateWayStatus = gateWayStatuses[mac];
+    const node = Object.keys(gateWayStatus.nodes).find(nm => nm === nodeMac);
+    if (node) {
+      Object.assign(gateWayStatus.nodes[node], { draft: true }, {});
+    }
+  });
+}
+
 
 module.exports.currentStatus = readStatus;
 module.exports.gateWayList = gateWayList;
@@ -133,3 +158,5 @@ module.exports.addNode = addNode;
 module.exports.addNodeMode = addNodeMode;
 module.exports.setField = setField;
 module.exports.schedulerToHex = schedulerToHex;
+module.exports.setDraft = setDraft;
+module.exports.getNodeByMac = getNodeByMac;

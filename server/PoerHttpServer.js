@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { port } = require('./HTTPConfig');
+const logger = require('./lib/Logger');
 const { readCurrentStatus, gateWayList } = require('./lib/DeviceStatus');
 const {
   setAction, activateAction,
@@ -195,7 +196,7 @@ server.post('/action/schedule', cors(corsOptions), (req, res) => {
 
 function start() {
   server.listen(port, () => {
-    console.info(`HTTP poer listening on port ${port}`);
+    logger.info(`HTTP poer listening on port ${port}`);
   });
 }
 

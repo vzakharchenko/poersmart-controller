@@ -5,9 +5,10 @@
   "main": "PoerAppServer.js",
   "scripts": {
     "start": "node  PoerUdpServer.js ",
+    "build": "cd plugins/UIPlugin && npm i && npm build:prod",
     "test:init": "jest --init ",
-    "lint": "eslint --ext .js lib/* PoerUdpServer.js PoerHttpServer.js",
-    "lint:fix": "eslint --fix --ext .js lib/* PoerUdpServer.js PoerHttpServer.js",
+    "lint": "eslint --ext .js lib/* PoerUdpServer.js PoerHttpServer.js && cd plugins/UIPlugin && npm i && npm run lint",
+    "lint:fix": "eslint --fix --ext .js lib/* PoerUdpServer.js PoerHttpServer.js&& cd plugins/UIPlugin && npm i && npm run lint:fix",
     "start-boot": "pm2 start PoerUdpServer.js",
     "test": "jest"
   },

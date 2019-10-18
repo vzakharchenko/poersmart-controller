@@ -1,10 +1,11 @@
+const logger = require('../../lib/Logger');
 
 function start() {
-  console.log('example start');
+  logger.info('example start');
 }
 
 function stop() {
-  console.log('example stop');
+  logger.info('example stop');
 }
 
 module.exports.start = start;
