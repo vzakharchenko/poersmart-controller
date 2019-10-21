@@ -123,8 +123,8 @@ function readNode(message) {
   // const overrideTemperature = readTemp(updatedMessage);
   updatedMessage = shiftRight(updatedMessage, 2);
   const softVersion = readSoftVersion(updatedMessage);
-  // updatedMessage = shiftRight(updatedMessage, 4);
-  // const SptTemprature = readTemp(updatedMessage);
+  updatedMessage = shiftRight(updatedMessage, 4);
+  const SptTemprature = readTemp(updatedMessage);
   return {
     mac,
     hardVersion,
@@ -134,7 +134,7 @@ function readNode(message) {
     // overrideTemperature,
     softVersion,
     actuatorStatus,
-  //  SptTemprature,
+    SptTemprature,
   };
 }
 
