@@ -105,6 +105,9 @@ test('GateWay Device-> Cloud Response MAN', () => {
   expect(event.nodeMac).toEqual('fce892000bff');
   expect(event.mode).toEqual('MAN');
   expect(event.modeInt).toEqual(1);
+  expect(event.tempHour).toEqual(23);
+  expect(event.tempMinute).toEqual(30);
+  expect(event.tempTemp).toEqual(0);
   expect(event.plugin).toBeDefined();
 });
 
@@ -130,6 +133,21 @@ test('GateWay Device-> Cloud Response ECO', () => {
   expect(event.nodeMac).toEqual('fce892000bff');
   expect(event.mode).toEqual('ECO');
   expect(event.modeInt).toEqual(3);
+  expect(event.plugin).toBeDefined();
+});
+
+test('GateWay Device-> Cloud Response Auto/MAN', () => {
+  const hex = hexToUint8Array('0206602dfee8922dec10000000000000fce892000bff76000400173b7008de03760200060000040101b207060000040101b2070000760207000807090054060c0062070e005406101e6207171e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602060fe907081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e760200000000000000000000000000000000000000000000000000007602061e0807081ea0050c00a0050e00a005101e6207161e76020000000000000000000000000000000000000000000000000000760207000807090054060c0062070e005406101e6207171e7602000000000000000000000000000000000000000000000000');
+  const event = gateWaySelector(hex);
+  expect(event.operation).toEqual('GATEWAY_ASK_DEVICE');
+  expect(event.count).toEqual(11616);
+  expect(event.mac).toEqual('fee8922dec10');
+  expect(event.nodeMac).toEqual('fce892000bff');
+  expect(event.mode).toEqual('AUTO/MAN');
+  expect(event.modeInt).toEqual(4);
+  expect(event.tempHour).toEqual(23);
+  expect(event.tempMinute).toEqual(59);
+  expect(event.tempTemp).toEqual(240);
   expect(event.plugin).toBeDefined();
 });
 

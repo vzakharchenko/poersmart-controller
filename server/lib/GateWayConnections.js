@@ -40,6 +40,16 @@ function readModeInt(message) {
   return arrayToInt8(mode);
 }
 
+function readTempHour(message) {
+  const hour = message.slice(0, 1);
+  return arrayToInt8(hour);
+}
+
+function readTempMinute(message) {
+  const minute = message.slice(0, 1);
+  return arrayToInt8(minute);
+}
+
 function readMode(message) {
   const i = readModeInt(message);
   return modes[i];
@@ -150,6 +160,12 @@ function deviceAskGateWay(message) {
   // let arrayToHex = int8ArrayToHex(updatedMessage);
   const mode = readMode(updatedMessage);
   const modeInt = readModeInt(updatedMessage);
+  updatedMessage = shiftRight(updatedMessage, 2);
+  const tempHour = readTempHour(updatedMessage);
+  updatedMessage = shiftRight(updatedMessage, 1);
+  const tempMinute = readTempMinute(updatedMessage);
+  updatedMessage = shiftRight(updatedMessage, 1);
+  const tempTemp = readTemp(updatedMessage);
   addNodeMode(mac, nodeMac, mode, modeInt, message);
   return {
     operation: constants[constants.GATEWAY_ASK_DEVICE],
@@ -158,6 +174,9 @@ function deviceAskGateWay(message) {
     nodeMac,
     mode,
     modeInt,
+    tempHour,
+    tempMinute,
+    tempTemp,
     message,
     plugin: require('./GateWayConnections'), // eslint-disable-line global-require
   };
