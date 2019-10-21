@@ -13,6 +13,9 @@ const language = {
   overrideTemperature: 'Override Temperature',
   offTemperature: 'Off Temperature',
   ecoTemperature: 'Eco Temperature',
+  TemporaryTemperature: 'Temporary Temperature',
+  Holdtill: 'hold till',
+  setTempMode: 'Set',
 };
 
 export function translate(test) {

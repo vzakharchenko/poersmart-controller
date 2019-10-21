@@ -74,6 +74,16 @@ export class PoerSmartStore {
       this.isLoaded = true;
     }));
   }
+
+  @action changeTempTemp(nodeMac, temp, hour, minute) {
+    fetchData(`${serverUrl}action/tempTemperature?node=${nodeMac}&temp=${temp}&hour=${hour}&minute=${minute}`).then(action(() => {
+    })).catch(action(({ data }) => {
+      this.error = data;
+    })).finally(action(() => {
+      this.isLoading = false;
+      this.isLoaded = true;
+    }));
+  }
 }
 
 export default new PoerSmartStore();

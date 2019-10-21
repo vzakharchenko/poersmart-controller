@@ -13,6 +13,9 @@ const language = {
   overrideTemperature: 'Температура для MAN режима',
   offTemperature: 'Температура для Off режима',
   ecoTemperature: 'Температура для ECO режима',
+  TemporaryTemperature: 'Установка временной температуры на время',
+  Holdtill: ' держать до ',
+  setTempMode: 'Установить',
 };
 
 export function translate(test) {
