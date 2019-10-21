@@ -15,6 +15,7 @@ const {
   TEMP_HOUR,
   TEMP_MINUTE,
   SCHEDULE,
+  TEMP_ACTION_TYPE,
 } = require('./lib/ActionDevice');
 // const { modes } = require('../../lib/Utils');
 
@@ -72,6 +73,7 @@ server.get('/action/tempTemperature', cors(corsOptions), (req, res) => {
     setAction(node, OVERRIDE_TEMPERATURE, temp);
     setAction(node, TEMP_HOUR, hour);
     setAction(node, TEMP_MINUTE, minute);
+    setAction(node, TEMP_ACTION_TYPE, 1);
     activateAction(node, DEVICE_TEMP_TYPE);
     res.send(JSON.stringify({ status: 'OK' }));
   }

@@ -1,15 +1,22 @@
+
 const dgram = require('dgram');
 const { int8ArrayToHex } = require('./lib/Utils');
 const { startPlugins, stopPlugins } = require('./lib/PluginManager');
 const { startHttp, stopHttp } = require('./PoerHttpServer');
 const logger = require('./lib/Logger');
-const { DEVICE_TEMP_TYPE, DEVICE_CHANGE_TYPE, getAction } = require('./lib/ActionDevice');
+const {
+  DEVICE_TEMP_TYPE,
+  DEVICE_CHANGE_TYPE,
+  MODE_INTEGER,
+  getAction,
+} = require('./lib/ActionDevice');
 const {
   gateWaySelector,
   prepareResponse,
   askDevice,
   sendAction,
   setDraft,
+  getCurrentState,
 } = require('./lib/GateWayMessages');
 const { getNodeByMac } = require('./lib/DeviceStatus');
 
@@ -36,12 +43,13 @@ server.on('message', (message, remote) => {
         let a = null;
         let action = null;
         const nodeInfo = getNodeByMac(node.mac);
-        if (nodeInfo && !nodeInfo.draft) {
+        const state = getCurrentState(event.mac, node.mac);
+        if (state && nodeInfo && !nodeInfo.draft) {
           a = getAction(node.mac);
           action = sendAction(event, a);
         }
         if (action) {
-          if (a.type === DEVICE_TEMP_TYPE) {
+          if (a.type === DEVICE_TEMP_TYPE && (state !== 'AUTO' && state !== 'AUTO/MAN')) {
             const actionAuto = {
               mac: a.mac,
               modeInt: 0,
@@ -63,6 +71,21 @@ server.on('message', (message, remote) => {
                       .address}:${remote.port} - ${int8ArrayToHex(action)}`);
                   },
                 );
+              },
+            );
+          } else if (a[MODE_INTEGER] === 0 && state === 'AUTO/MAN') {
+            const actionAuto = {
+              mac: a.mac,
+              temp_action_type: 0,
+            };
+            const actionAutoDevice = event.plugin.gateWayActionDevice(event, actionAuto);
+            server.send(
+              actionAutoDevice, 0,
+              actionAutoDevice.length, remote.port, remote.address, (err2) => {
+                setDraft(node.mac);
+                if (err2) throw err2;
+                logger.debug(`To Device UDP message sent to ${remote.address}:
+              ${remote.port} - ${int8ArrayToHex(actionAutoDevice)}`);
               },
             );
           } else {

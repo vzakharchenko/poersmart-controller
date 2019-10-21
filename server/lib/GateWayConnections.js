@@ -20,6 +20,7 @@ const {
   DEVICE_CHANGE_TYPE,
   TEMP_HOUR,
   TEMP_MINUTE,
+  TEMP_ACTION_TYPE,
   SCHEDULE,
   setReAction,
 } = require('./ActionDevice');
@@ -286,10 +287,14 @@ function gateWayActionDevice(event, action) {
   array.set(hexToUint8Array(event.mac), 4);
   array.set(hexToUint8Array(action.mac), 16);
   array.set(int8ToUint8Array(1), 22);
-  array.set(int8ToUint8Array(action[TEMP_HOUR]), 23);
-  array.set(int8ToUint8Array(action[TEMP_MINUTE]), 24);
-  array.set(int8ToUint8Array(1), 25);
-  array.set(int16ToUint8Array(action[OVERRIDE_TEMPERATURE] * 9), 26);
+  array.set(int8ToUint8Array(action[TEMP_HOUR] ? action[TEMP_HOUR] : 23), 23);
+  array.set(int8ToUint8Array(action[TEMP_MINUTE] ? action[TEMP_MINUTE] : 59), 24);
+  array.set(int8ToUint8Array(action[TEMP_ACTION_TYPE] === undefined ?
+    1 :
+    action[TEMP_ACTION_TYPE]), 25);
+  array.set(int16ToUint8Array((action[OVERRIDE_TEMPERATURE]
+    ? action[OVERRIDE_TEMPERATURE] :
+    320) * 9), 26);
   return array;
 }
 

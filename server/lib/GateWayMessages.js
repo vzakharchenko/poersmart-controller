@@ -6,7 +6,7 @@ const {
   deviceConfirmation,
 } = require('./GateWayConnections');
 
-const { setDraft } = require('./DeviceStatus');
+const { setDraft, readCurrentStatus } = require('./DeviceStatus');
 
 
 function gateWaySelector(message) {
@@ -45,6 +45,15 @@ function askDevice(event, node) {
   return ret;
 }
 
+function getCurrentState(mac, nodeMac) {
+  const macState = readCurrentStatus(mac);
+  let nodeStatus;
+  if (macState && macState.nodes && macState.nodes[nodeMac]) {
+    const node = macState.nodes[nodeMac];
+    nodeStatus = node.mode;
+  }
+  return nodeStatus;
+}
 function sendAction(event, action) {
   let ret = null;
   if (action) {
@@ -61,4 +70,5 @@ module.exports.prepareResponse = prepareResponse;
 module.exports.askDevice = askDevice;
 module.exports.sendAction = sendAction;
 module.exports.setDraft = setDraft;
+module.exports.getCurrentState = getCurrentState;
 

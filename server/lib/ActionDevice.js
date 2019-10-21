@@ -56,3 +56,4 @@ module.exports.DEVICE_CHANGE_TYPE = 'device_type';
 module.exports.DEVICE_TEMP_TYPE = 'device_temp_type';
 module.exports.TEMP_HOUR = 'temp_hour';
 module.exports.TEMP_MINUTE = 'temp_minute';
+module.exports.TEMP_ACTION_TYPE = 'temp_action_type';

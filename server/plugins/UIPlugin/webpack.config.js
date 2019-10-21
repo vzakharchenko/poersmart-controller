@@ -27,7 +27,7 @@ const json = JSON.stringify({
 const definePluginConfig = {
   'process.env': {
     // SERVERURL:
-    SERVER_URL: JSON.stringify(env === 'development' ? 'http://192.100.200.214:7001/' : '/'),
+    SERVER_URL: JSON.stringify(env === 'development' ? 'http://192.100.200.208:7001/' : '/'),
     JSON_BUILD: JSON.stringify(json),
   },
 };
