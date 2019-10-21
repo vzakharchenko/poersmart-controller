@@ -166,8 +166,7 @@ function deviceAskGateWay(message) {
   const tempMinute = readTempMinute(updatedMessage);
   updatedMessage = shiftRight(updatedMessage, 1);
   const tempTemp = readTemp(updatedMessage);
-  addNodeMode(mac, nodeMac, mode, modeInt, message);
-  return {
+  const ret = {
     operation: constants[constants.GATEWAY_ASK_DEVICE],
     count: number,
     mac,
@@ -180,6 +179,8 @@ function deviceAskGateWay(message) {
     message,
     plugin: require('./GateWayConnections'), // eslint-disable-line global-require
   };
+  addNodeMode(ret, message);
+  return ret;
 }
 
 function deviceToGateWay(message) {

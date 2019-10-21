@@ -70,12 +70,12 @@ function schedulerToHex(json) {
   return array;
 }
 
-function addNodeMode(mac, nodeMac, mode, modeInt, message) {
-  const gateWayStatus = getGateWayStatus(mac);
-  const node = gateWayStatus.nodes[nodeMac];
+function addNodeMode(nodeStatus, message) {
+  const gateWayStatus = getGateWayStatus(nodeStatus.mac);
+  const node = gateWayStatus.nodes[nodeStatus.nodeMac];
   if (node) {
-    node.mode = mode;
-    node.modeInt = modeInt;
+    node.mode = nodeStatus.mode;
+    node.modeInt = nodeStatus.modeInt;
     node.message = int8ArrayToHex(message);
     const overrideTemperatureHex = message.slice(26, 28);
     const offTemperatureHex = message.slice(28, 30);
@@ -90,8 +90,11 @@ function addNodeMode(mac, nodeMac, mode, modeInt, message) {
     node.offTemperature = offTemperature;
     node.ecoTemperature = ecoTemperature;
     node.scheduler = schedulerJson;
-    node.nodeMac = nodeMac;
-    node.mac = mac;
+    node.nodeMac = nodeStatus.nodeMac;
+    node.mac = nodeStatus.mac;
+    node.tempHour = nodeStatus.tempHour;
+    node.tempMinute = nodeStatus.tempMinute;
+    node.tempTemp = nodeStatus.tempTemp;
     node.readMode = true;
     node.draft = false;
   }
