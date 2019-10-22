@@ -6,6 +6,7 @@ const language = {
   wifiLevel: 'WiFi Level',
   Update: 'Update',
   curTemp: 'Current Temperature',
+  targetTemp: 'Target Temperature',
   humidity: 'Humidity',
   battery: 'Battery',
   actuatorStatus: 'Actuator Status',
@@ -16,6 +17,19 @@ const language = {
   TemporaryTemperature: 'Temporary Temperature',
   Holdtill: 'hold till',
   setTempMode: 'Set',
+  Sun: 'Sun',
+  Mon: 'Mon',
+  Tue: 'Tue',
+  Wed: 'Wed',
+  Thu: 'Thu',
+  Fri: 'Fri',
+  Sat: 'Sat',
+  Scheduler: 'Scheduler',
+  Id: 'Id',
+  Hour: 'Hour',
+  Minute: 'Minute',
+  Temperature: 'Temperature',
+  saveScheduler: 'Save',
 };
 
 export function translate(test) {

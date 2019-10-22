@@ -1,12 +1,25 @@
+export const temps = [];
+export const hours = [];
 
-const temps0 = [];
 
+export const minutes = [];
 
 function fillTemperatures() {
   for (let i = 0; i < 320; i++) { // eslint-disable-line no-plusplus
-    temps0.push(i);
+    temps.push(i);
+  }
+}
+function fillHours() {
+  for (let i = 0; i < 23; i++) { // eslint-disable-line no-plusplus
+    hours.push(i);
+  }
+}
+function fillMinutes() {
+  for (let i = 0; i < 59; i++) { // eslint-disable-line no-plusplus
+    minutes.push(i);
   }
 }
 fillTemperatures();
+fillHours();
 
-export default temps0;
+fillMinutes();

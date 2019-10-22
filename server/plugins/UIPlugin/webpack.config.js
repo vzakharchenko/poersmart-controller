@@ -18,6 +18,7 @@ const htmlPlugin = new HtmlWebPackPlugin({
 const progressBarPlugin = new ProgressBarPlugin();
 
 const env = process.env.NODE_ENV || 'development';
+const devUrl = process.env.DEV_URL || 'localhost:7001/';
 
 console.log(`mode = ${env}`);
 
@@ -27,7 +28,7 @@ const json = JSON.stringify({
 const definePluginConfig = {
   'process.env': {
     // SERVERURL:
-    SERVER_URL: JSON.stringify(env === 'development' ? 'http://192.100.200.208:7001/' : '/'),
+    SERVER_URL: JSON.stringify(env === 'development' ? devUrl : '/'),
     JSON_BUILD: JSON.stringify(json),
   },
 };

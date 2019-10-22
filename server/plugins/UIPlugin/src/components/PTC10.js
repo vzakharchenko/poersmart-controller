@@ -1,7 +1,9 @@
 import React from 'react';
-import { Button, Panel, Table } from 'react-bootstrap';
+import { Panel, Table } from 'react-bootstrap';
 import { observer, inject } from 'mobx-react';
-import temps from './TempValues';
+import { temps } from './TempValues';
+import PoersPTC10Temp from './TempTemperature.js';
+import PoersPTC10Scheduler from './SchedulerTemperature.js';
 
 export default @inject('poerSmartStore', 'languageStore')
 @observer
@@ -27,14 +29,9 @@ class PTC10 extends React.Component {
     this.props.poerSmartStore.changeTemp(event.target.getAttribute('mac'), 'off', temp);
   };
 
-  tempModeClickChange = (event) => {
-    const temp = window.document.getElementById('temporaryTemperature').value;
-    const holdTime = window.document.getElementById('holdTime').value;
-    const timeStrings = holdTime.split(':');
-    this.props.poerSmartStore.changeTempTemp(event.target.getAttribute('mac'), temp, timeStrings[0], timeStrings[1]);
-  };
 
   render() {
+    const { node } = this.props;
     const {
       nodeMac,
       draft,
@@ -46,7 +43,8 @@ class PTC10 extends React.Component {
       overrideTemperature,
       offTemperature,
       ecoTemperature,
-    } = this.props.node;
+      SptTemprature,
+    } = node;
     const { languageJS } = this.props.languageStore;
     return (
       <Panel>
@@ -78,6 +76,13 @@ Node PoersMart PTC10
                 }}
                 >
                   {languageJS.translate('curTemp')}
+                </th>
+                <th style={{
+                  'text-align': 'center',
+                  'vertical-align': 'top',
+                }}
+                >
+                  {languageJS.translate('targetTemp')}
                 </th>
                 <th style={{
                   'text-align': 'center',
@@ -163,6 +168,15 @@ Node PoersMart PTC10
                   {(curTemp / 10).toFixed(1)}
                   {' '}
           °C
+                </td>
+                <td style={{
+                  'text-align': 'center',
+                  'vertical-align': 'middle',
+                }}
+                >
+                  {(SptTemprature / 10).toFixed(1)}
+                  {' '}
+                  °C
                 </td>
                 <td style={{
                   'text-align': 'center',
@@ -283,38 +297,16 @@ Node PoersMart PTC10
             °C
                 </td>
               </tr>
-              {mode === 'AUTO'
-                ? (
-                  <tr>
-                    <td colSpan="13">
-                      <div>
-                        <label id="l1">
-                          {languageJS.translate('TemporaryTemperature')}
-:
-                        </label>
-                        <select
-                          id="temporaryTemperature"
-                          name="temporaryTemperature"
-                          style={{ width: '60px' }}
-                        >
-                          {
-                          temps.map(t => (
-                            t === overrideTemperature
-                              ? <option id={`override_${t}`} value={t} selected>{(t / 10).toFixed(1)}</option>
-                              : <option id={`override_${t}`} value={t}>{(t / 10).toFixed(1)}</option>))
-                        }
-                        </select>
-                      °C
-                        {' '}
-                        {languageJS.translate('Holdtill')}
-                        <input type="time" name="holdTime" id="holdTime" value="23:59" />
-                        <Button variant="primary" mac={nodeMac} onClick={this.tempModeClickChange}>{languageJS.translate('setTempMode')}</Button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-                : null
-            }
+              <tr>
+                <td colSpan="14">
+                  <PoersPTC10Temp node={node} />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="14">
+                  <PoersPTC10Scheduler node={node} />
+                </td>
+              </tr>
             </tbody>
           </Table>
         </Panel.Body>

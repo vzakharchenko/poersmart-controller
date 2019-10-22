@@ -6,6 +6,7 @@ const language = {
   wifiLevel: 'Уровень WiFi',
   Update: 'Обновление',
   curTemp: 'Текущая температура',
+  targetTemp: 'Ожидаемая температура',
   humidity: 'Влажность',
   battery: 'Батарея',
   actuatorStatus: 'Горелка',
@@ -16,6 +17,19 @@ const language = {
   TemporaryTemperature: 'Установка временной температуры на время',
   Holdtill: ' держать до ',
   setTempMode: 'Установить',
+  Sun: 'Воскресенье',
+  Mon: 'Понедельник',
+  Tue: 'Вторник',
+  Wed: 'Среда',
+  Thu: 'Четверг',
+  Fri: 'Пятница',
+  Sat: 'Суббота',
+  Scheduler: 'Расписание',
+  Id: 'Порядковый номер',
+  Hour: 'Часы',
+  Minute: 'Минуты',
+  Temperature: 'Температура',
+  saveScheduler: 'Сохранить расписание',
 };
 
 export function translate(test) {

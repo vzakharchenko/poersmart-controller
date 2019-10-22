@@ -5,6 +5,7 @@ import poerSmartStore from './stores/PoerSmartStore';
 import poerSmartGateWayStore from './stores/PoerSmartGateWayStore';
 import tabsStore from './stores/TabsStore';
 import languageStore from './stores/LanguageStore';
+import schedulerStore from './stores/SchedulerStore';
 import App from './components/App';
 
 const stores = {
@@ -12,6 +13,7 @@ const stores = {
   languageStore,
   tabsStore,
   poerSmartGateWayStore,
+  schedulerStore,
 };
 
 // For easier debugging
